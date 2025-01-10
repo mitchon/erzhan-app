@@ -1,5 +1,6 @@
 package org.mitchan.erzhan.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -55,6 +56,7 @@ import kotlin.random.Random
 fun AlarmsListView(
     modifier: Modifier = Modifier,
     state: State<AlarmsListModel>,
+    onClick: (id: UUID) -> Unit,
     onAdd: () -> Unit,
     onEnableToggled: (id: UUID) -> Unit,
     onDelete: (id: UUID) -> Unit,
@@ -79,6 +81,7 @@ fun AlarmsListView(
                 AlarmItem(
                     alarm = it,
                     onEnableToggled = onEnableToggled,
+                    onClick = onClick,
                     onDelete = onDelete
                 )
             }
@@ -139,11 +142,12 @@ fun AlarmItem(
     modifier: Modifier = Modifier,
     alarm: AlarmListItemModel,
     onEnableToggled: (id: UUID) -> Unit,
+    onClick: (id: UUID) -> Unit,
     onDelete: (id: UUID) -> Unit
 ) {
     val alarmState by remember(alarm) { mutableStateOf(alarm) }
     Card(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth().clickable { onClick(alarm.id) },
     ) {
         Row(
             modifier = Modifier
@@ -220,6 +224,7 @@ fun AlarmItemPreview() {
                 )
             ),
             onEnableToggled = { },
+            onClick = { },
             onDelete = { }
         )
     }
