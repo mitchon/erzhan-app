@@ -24,7 +24,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,12 +39,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.mitchan.erzhan.models.AlarmListItemModel
+import org.mitchan.erzhan.models.AlarmsListModel
 import org.mitchan.erzhan.ui.theme.ErzhanTheme
-import org.mitchan.erzhan.viewmodels.AlarmsListViewModel
 import java.time.DayOfWeek
 import java.time.Duration
 import java.time.LocalTime
@@ -53,8 +52,13 @@ import java.util.UUID
 import kotlin.random.Random
 
 @Composable
-fun AlarmsListView(modifier: Modifier = Modifier, viewModel: AlarmsListViewModel = viewModel()) {
-    val state = viewModel.observe().collectAsState()
+fun AlarmsListView(
+    modifier: Modifier = Modifier,
+    state: State<AlarmsListModel>,
+    onAdd: () -> Unit,
+    onEnableToggled: (id: UUID) -> Unit,
+    onDelete: (id: UUID) -> Unit,
+) {
     var items by remember { mutableStateOf(emptyList<AlarmListItemModel>()) }
 
     val lazyColumnState = rememberLazyListState()
@@ -74,8 +78,8 @@ fun AlarmsListView(modifier: Modifier = Modifier, viewModel: AlarmsListViewModel
             ) {
                 AlarmItem(
                     alarm = it,
-                    onEnableChanged = { id -> viewModel.enableToggled(id)},
-                    onDelete = { id -> viewModel.delete(id) }
+                    onEnableToggled = onEnableToggled,
+                    onDelete = onDelete
                 )
             }
         }
@@ -84,7 +88,7 @@ fun AlarmsListView(modifier: Modifier = Modifier, viewModel: AlarmsListViewModel
                 .align(Alignment.BottomEnd)
                 .absolutePadding(right = 4.dp, bottom = 4.dp),
             onClick = {
-                viewModel.add()
+                onAdd()
                 coroutineScope.launch(Dispatchers.IO) {
                     lazyColumnState.scrollToItem(maxOf(items.size, 0))
                 }
@@ -134,7 +138,7 @@ fun AlarmsListItemContextMenu(
 fun AlarmItem(
     modifier: Modifier = Modifier,
     alarm: AlarmListItemModel,
-    onEnableChanged: (id: UUID) -> Unit,
+    onEnableToggled: (id: UUID) -> Unit,
     onDelete: (id: UUID) -> Unit
 ) {
     val alarmState by remember(alarm) { mutableStateOf(alarm) }
@@ -186,7 +190,7 @@ fun AlarmItem(
                 Column {
                     Switch(
                         checked = alarmState.enabled,
-                        onCheckedChange = { onEnableChanged(alarmState.id) }
+                        onCheckedChange = { onEnableToggled(alarmState.id) }
                     )
                     AlarmsListItemContextMenu(
                         alarm = alarmState,
@@ -215,7 +219,7 @@ fun AlarmItemPreview() {
                     )
                 )
             ),
-            onEnableChanged = { },
+            onEnableToggled = { },
             onDelete = { }
         )
     }
