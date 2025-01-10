@@ -1,15 +1,10 @@
-package org.mitchan.erzhan
+package org.mitchan.erzhan.ui
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.absolutePadding
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,16 +17,14 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,48 +39,30 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.mitchan.erzhan.model.AlarmListItem
+import org.mitchan.erzhan.models.AlarmListItemModel
 import org.mitchan.erzhan.ui.theme.ErzhanTheme
+import org.mitchan.erzhan.viewmodels.AlarmsListViewModel
 import java.time.DayOfWeek
+import java.time.Duration
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.UUID
-
-class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            ErzhanTheme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    topBar = {
-                        TopAppBar(title = { Text("Erzhan") })
-                    }
-                ) { innerPadding ->
-                    AlarmsListScreen(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
-        }
-    }
-}
+import kotlin.random.Random
 
 @Composable
-fun AlarmsListScreen(modifier: Modifier = Modifier) {
-    var alarmsMap by remember { mutableStateOf<Map<UUID, AlarmListItem>>(emptyMap()) }
+fun AlarmsListView(modifier: Modifier = Modifier, viewModel: AlarmsListViewModel = viewModel()) {
+    val state = viewModel.observe().collectAsState()
+    var items by remember { mutableStateOf(emptyList<AlarmListItemModel>()) }
+
     val lazyColumnState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
-//    LaunchedEffect(alarmsMap) {
-//        alarmsMap = alarmsMap.entries
-//            .sortedBy { (_, v) -> v.time }
-//            .sortedBy { (_, v) -> v.enabled }
-//            .associate { (k, v) -> k to v }
-//    }
+    LaunchedEffect(state.value.items) {
+        items = state.value.items.values.sortedBy { it.time }
+    }
 
     Box(modifier = modifier.fillMaxSize()) {
         LazyColumn(
@@ -95,18 +70,12 @@ fun AlarmsListScreen(modifier: Modifier = Modifier) {
             state = lazyColumnState
         ) {
             items(
-                items = alarmsMap.entries.toList()
+                items = items
             ) {
                 AlarmItem(
-                    alarm = it.value,
-                    onEnableChanged = { alarm ->
-                        alarmsMap[alarm.id]?.let {
-                            alarmsMap += it.id to it.copy(enabled = !it.enabled)
-                        }
-                    },
-                    onDelete = { id ->
-                        alarmsMap = alarmsMap.minus(id)
-                    }
+                    alarm = it,
+                    onEnableChanged = { id -> viewModel.enableToggled(id)},
+                    onDelete = { id -> viewModel.delete(id) }
                 )
             }
         }
@@ -115,21 +84,9 @@ fun AlarmsListScreen(modifier: Modifier = Modifier) {
                 .align(Alignment.BottomEnd)
                 .absolutePadding(right = 4.dp, bottom = 4.dp),
             onClick = {
-                val new = AlarmListItem(
-                    id = UUID.randomUUID(),
-                    time = LocalTime.now(),
-                    enabled = true,
-                    trait = AlarmListItem.TraitByWeekday(
-                        weekDayMap = mapOf(
-                            DayOfWeek.MONDAY to true,
-                            DayOfWeek.TUESDAY to false,
-                            DayOfWeek.WEDNESDAY to true,
-                        )
-                    )
-                )
-                alarmsMap += (new.id to new)
-                coroutineScope.launch {
-                    lazyColumnState.scrollToItem(alarmsMap.size - 1)
+                viewModel.add()
+                coroutineScope.launch(Dispatchers.IO) {
+                    lazyColumnState.scrollToItem(maxOf(items.size, 0))
                 }
             }
         ) {
@@ -139,9 +96,9 @@ fun AlarmsListScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun AlarmContextMenu(
+fun AlarmsListItemContextMenu(
     modifier: Modifier = Modifier,
-    alarm: AlarmListItem,
+    alarm: AlarmListItemModel,
     onDelete: (id: UUID) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -164,7 +121,10 @@ fun AlarmContextMenu(
             DropdownMenuItem(
                 modifier = Modifier.padding(4.dp),
                 text = { Text("Delete") },
-                onClick = { onDelete(alarm.id) }
+                onClick = {
+                    onDelete(alarm.id)
+                    expanded = false
+                }
             )
         }
     }
@@ -173,8 +133,8 @@ fun AlarmContextMenu(
 @Composable
 fun AlarmItem(
     modifier: Modifier = Modifier,
-    alarm: AlarmListItem,
-    onEnableChanged: (alarm: AlarmListItem) -> Unit,
+    alarm: AlarmListItemModel,
+    onEnableChanged: (id: UUID) -> Unit,
     onDelete: (id: UUID) -> Unit
 ) {
     val alarmState by remember(alarm) { mutableStateOf(alarm) }
@@ -192,13 +152,13 @@ fun AlarmItem(
             ) {
                 Column {
                     val traits = when (val alarmTrait = alarmState.trait) {
-                        is AlarmListItem.TraitOnce -> buildAnnotatedString {  }
-                        is AlarmListItem.TraitEveryday -> buildAnnotatedString {
+                        is AlarmListItemModel.TraitOnce -> buildAnnotatedString {  }
+                        is AlarmListItemModel.TraitEveryday -> buildAnnotatedString {
                             withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                                 append(DayOfWeek.entries.joinToString(" ", "", " ") { it.name.first().toString() })
                             }
                         }
-                        is AlarmListItem.TraitByWeekday -> buildAnnotatedString {
+                        is AlarmListItemModel.TraitByWeekday -> buildAnnotatedString {
                             DayOfWeek.entries.map { day ->
                                 if (alarmTrait.weekDayMap[day] == true) {
                                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
@@ -226,9 +186,9 @@ fun AlarmItem(
                 Column {
                     Switch(
                         checked = alarmState.enabled,
-                        onCheckedChange = { onEnableChanged(alarmState) }
+                        onCheckedChange = { onEnableChanged(alarmState.id) }
                     )
-                    AlarmContextMenu(
+                    AlarmsListItemContextMenu(
                         alarm = alarmState,
                         onDelete = { onDelete(alarmState.id) }
                     )
@@ -243,11 +203,11 @@ fun AlarmItem(
 fun AlarmItemPreview() {
     ErzhanTheme {
         AlarmItem (
-            alarm = AlarmListItem(
+            alarm = AlarmListItemModel(
                 id = UUID.randomUUID(),
-                time = LocalTime.now(),
+                time = LocalTime.now() + Duration.ofMinutes(Random.nextLong() % 10 ),
                 enabled = true,
-                trait = AlarmListItem.TraitByWeekday(
+                trait = AlarmListItemModel.TraitByWeekday(
                     weekDayMap = mapOf(
                         DayOfWeek.MONDAY to true,
                         DayOfWeek.TUESDAY to false,
