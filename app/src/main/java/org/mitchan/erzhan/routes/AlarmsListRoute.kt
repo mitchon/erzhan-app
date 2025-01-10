@@ -18,9 +18,11 @@ fun AlarmsListRoute(
 ) {
     val state = viewModel.observe().collectAsState()
 
+    viewModel.initialize()
+
     AlarmsListView(
         state = state,
-        onClick = { id -> viewModel.navigateAlarm(id, navigator) },
+        onClick = { id -> viewModel.navigateItem(id, navigator) },
         onAdd = { viewModel.add() },
         onEnableToggled = { id -> viewModel.enableToggled(id) },
         onDelete = { id -> viewModel.delete(id) }

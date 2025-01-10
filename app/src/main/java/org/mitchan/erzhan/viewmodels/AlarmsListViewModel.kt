@@ -1,17 +1,15 @@
 package org.mitchan.erzhan.viewmodels
 
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewModelScope
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.mitchan.erzhan.entities.AlarmsDatabase
-import org.mitchan.erzhan.entities.AlarmsRepository
+import org.mitchan.erzhan.DatabaseInstance
 import org.mitchan.erzhan.entities.AlarmsRepositoryImpl
-import org.mitchan.erzhan.models.AlarmListItemModel
+import org.mitchan.erzhan.models.AlarmModel
+import org.mitchan.erzhan.models.AlarmModel.Companion.toListItem
 import org.mitchan.erzhan.models.AlarmsListModel
-import org.mitchan.erzhan.routes.AlarmRoute
 import org.mitchan.erzhan.routes.destinations.AlarmRouteDestination
 import java.time.DayOfWeek
 import java.time.Duration
@@ -19,21 +17,15 @@ import java.time.LocalTime
 import java.util.UUID
 import kotlin.random.Random
 
-class AlarmsListViewModel(
-    private val alarmsRepository: AlarmsRepository
-): IViewModel<AlarmsListModel>(::AlarmsListModel) {
+class AlarmsListViewModel: IViewModel<AlarmsListModel>(::AlarmsListModel) {
+
+    private val alarmsRepository by lazy {
+        AlarmsRepositoryImpl(DatabaseInstance.instance!!.alarmDao())
+    }
 
     fun initialize() {
         viewModelScope.launch(Dispatchers.IO) {
-            val items = alarmsRepository.getAll().map {
-                AlarmListItemModel(
-                    id = it.id,
-                    time = it.time,
-                    enabled = it.enabled,
-//                    trait = it.trait,
-                    trait = AlarmListItemModel.TraitByWeekday(mapOf()),
-                )
-            }.associateBy { it.id }
+            val items = alarmsRepository.getAll().associateBy { it.id }
 
             stateFlow.update {
                 it.copy(items = items)
@@ -42,11 +34,11 @@ class AlarmsListViewModel(
     }
 
     fun add() {
-        val new = AlarmListItemModel(
+        val model = AlarmModel(
             id = UUID.randomUUID(),
             time = LocalTime.now() + Duration.ofMinutes(Random.nextLong() % 10 ),
             enabled = true,
-            trait = AlarmListItemModel.TraitByWeekday(
+            trait = AlarmModel.TraitByWeekday(
                 weekDayMap = mapOf(
                     DayOfWeek.MONDAY to true,
                     DayOfWeek.TUESDAY to false,
@@ -56,6 +48,8 @@ class AlarmsListViewModel(
         )
 
         viewModelScope.launch(Dispatchers.IO) {
+            val new = alarmsRepository.insert(model).toListItem()
+
             stateFlow.update {
                 it.copy(
                     items = it.items + (new.id to new)
@@ -78,6 +72,7 @@ class AlarmsListViewModel(
 
     fun delete(id: UUID) {
         viewModelScope.launch(Dispatchers.IO) {
+            alarmsRepository.delete(id)
             stateFlow.update {
                 it.copy(
                     items = it.items - id
@@ -86,7 +81,7 @@ class AlarmsListViewModel(
         }
     }
 
-    fun navigateAlarm(id: UUID, navigator: DestinationsNavigator) {
+    fun navigateItem(id: UUID, navigator: DestinationsNavigator) {
         navigator.navigate(AlarmRouteDestination(id))
     }
 }

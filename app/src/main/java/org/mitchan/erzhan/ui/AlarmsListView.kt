@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.mitchan.erzhan.models.AlarmListItemModel
+import org.mitchan.erzhan.models.AlarmModel
 import org.mitchan.erzhan.models.AlarmsListModel
 import org.mitchan.erzhan.ui.theme.ErzhanTheme
 import java.time.DayOfWeek
@@ -92,9 +93,9 @@ fun AlarmsListView(
                 .absolutePadding(right = 4.dp, bottom = 4.dp),
             onClick = {
                 onAdd()
-                coroutineScope.launch(Dispatchers.IO) {
-                    lazyColumnState.scrollToItem(maxOf(items.size, 0))
-                }
+//                coroutineScope.launch(Dispatchers.IO) {
+//                    lazyColumnState.scrollToItem(maxOf(items.size - 1, 0))
+//                }
             }
         ) {
             Icon(Icons.Filled.Add, "Add alarm")
@@ -160,13 +161,13 @@ fun AlarmItem(
             ) {
                 Column {
                     val traits = when (val alarmTrait = alarmState.trait) {
-                        is AlarmListItemModel.TraitOnce -> buildAnnotatedString {  }
-                        is AlarmListItemModel.TraitEveryday -> buildAnnotatedString {
+                        is AlarmModel.TraitOnce -> buildAnnotatedString {  }
+                        is AlarmModel.TraitEveryday -> buildAnnotatedString {
                             withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                                 append(DayOfWeek.entries.joinToString(" ", "", " ") { it.name.first().toString() })
                             }
                         }
-                        is AlarmListItemModel.TraitByWeekday -> buildAnnotatedString {
+                        is AlarmModel.TraitByWeekday -> buildAnnotatedString {
                             DayOfWeek.entries.map { day ->
                                 if (alarmTrait.weekDayMap[day] == true) {
                                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
@@ -215,7 +216,7 @@ fun AlarmItemPreview() {
                 id = UUID.randomUUID(),
                 time = LocalTime.now() + Duration.ofMinutes(Random.nextLong() % 10 ),
                 enabled = true,
-                trait = AlarmListItemModel.TraitByWeekday(
+                trait = AlarmModel.TraitByWeekday(
                     weekDayMap = mapOf(
                         DayOfWeek.MONDAY to true,
                         DayOfWeek.TUESDAY to false,
