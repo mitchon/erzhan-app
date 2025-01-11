@@ -1,7 +1,7 @@
 package org.mitchan.erzhan.routes
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
@@ -16,14 +16,14 @@ fun AlarmsListRoute(
     navigator: DestinationsNavigator,
     viewModel: AlarmsListViewModel = viewModel(),
 ) {
-    val state = viewModel.observe().collectAsState()
+    val state = viewModel.observe().collectAsStateWithLifecycle()
 
     viewModel.initialize()
 
-    AlarmsListView(
+    AlarmsListView (
         state = state,
         onClick = { id -> viewModel.navigateItem(id, navigator) },
-        onAdd = { viewModel.add() },
+        onAdd = { viewModel.navigateItem(null, navigator) },
         onEnableToggled = { id -> viewModel.enableToggled(id) },
         onDelete = { id -> viewModel.delete(id) }
     )

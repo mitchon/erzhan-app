@@ -80,6 +80,7 @@ fun AlarmsListView(
                 items = items
             ) {
                 AlarmItem(
+                    modifier = Modifier.animateItem(),
                     alarm = it,
                     onEnableToggled = onEnableToggled,
                     onClick = onClick,

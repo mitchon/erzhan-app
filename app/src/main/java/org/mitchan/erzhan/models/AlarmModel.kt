@@ -8,10 +8,10 @@ import java.time.LocalTime
 import java.util.UUID
 
 data class AlarmModel(
-    val id: UUID,
-    val time: LocalTime,
-    val enabled: Boolean,
-    val trait: Trait
+    val id: UUID = UUID.randomUUID(),
+    val time: LocalTime = LocalTime.now(),
+    val enabled: Boolean = true,
+    val trait: Trait = TraitEveryday
 ) {
     @Serializable
     @Polymorphic
