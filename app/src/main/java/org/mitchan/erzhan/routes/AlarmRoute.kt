@@ -1,8 +1,6 @@
 package org.mitchan.erzhan.routes
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -31,8 +29,8 @@ fun AlarmRoute(
             state = state,
             onAdd = {
                 viewModel.add(it)
-                navigator.navigateUp()
+                navigator.popBackStack()
             },
-            onCancel = { navigator.navigateUp() }
+            onCancel = { navigator.popBackStack() }
         )
 }
