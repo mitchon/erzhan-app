@@ -1,4 +1,4 @@
-package org.mitchan.erzhan.ui
+package org.mitchan.erzhan.ui.alarm
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,7 +10,6 @@ import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
-import org.mitchan.erzhan.models.AlarmModel
 import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)

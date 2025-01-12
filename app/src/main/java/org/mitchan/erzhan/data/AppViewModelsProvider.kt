@@ -1,22 +1,12 @@
-package org.mitchan.erzhan.viewmodels
+package org.mitchan.erzhan.data
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import org.mitchan.erzhan.ErzhanApplication
-
-abstract class IViewModel<T> protected constructor(factory: () -> T) : ViewModel() {
-    protected val stateFlow: MutableStateFlow<T> = MutableStateFlow(factory())
-
-    fun observe(): StateFlow<T> {
-        return stateFlow.asStateFlow()
-    }
-}
+import org.mitchan.erzhan.ui.alarm.AlarmViewModel
+import org.mitchan.erzhan.ui.alarmslist.AlarmsListViewModel
 
 object AppViewModelsProvider {
     val Factory = viewModelFactory {

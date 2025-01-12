@@ -1,4 +1,4 @@
-package org.mitchan.erzhan.routes
+package org.mitchan.erzhan.ui.alarm
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -6,9 +6,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import org.mitchan.erzhan.ui.AlarmView
-import org.mitchan.erzhan.viewmodels.AlarmViewModel
-import org.mitchan.erzhan.viewmodels.AppViewModelsProvider
+import org.mitchan.erzhan.data.AppViewModelsProvider
 import java.util.UUID
 
 @RootNavGraph
@@ -23,9 +21,7 @@ fun AlarmRoute(
     viewModel.initialize(id)
     val state = viewModel.observe().collectAsStateWithLifecycle()
 
-    val initialized = viewModel.initialized.collectAsStateWithLifecycle().value
-
-    if (initialized)
+    if (state.value.isInitialized)
         AlarmView(
             state = state,
             onAdd = {

@@ -12,7 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.Modifier
 import com.ramcosta.composedestinations.DestinationsNavHost
-import org.mitchan.erzhan.routes.NavGraphs
+import org.mitchan.erzhan.ui.NavGraphs
 import org.mitchan.erzhan.ui.theme.ErzhanTheme
 
 class MainActivity : ComponentActivity() {

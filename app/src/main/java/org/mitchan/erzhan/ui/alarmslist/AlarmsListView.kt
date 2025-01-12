@@ -1,4 +1,4 @@
-package org.mitchan.erzhan.ui
+package org.mitchan.erzhan.ui.alarmslist
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -40,11 +40,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.mitchan.erzhan.models.AlarmListItemModel
-import org.mitchan.erzhan.models.AlarmModel
-import org.mitchan.erzhan.models.AlarmsListModel
+import org.mitchan.erzhan.ui.alarm.AlarmModel
 import org.mitchan.erzhan.ui.theme.ErzhanTheme
 import java.time.DayOfWeek
 import java.time.Duration

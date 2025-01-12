@@ -1,4 +1,4 @@
-package org.mitchan.erzhan.routes
+package org.mitchan.erzhan.ui.alarmslist
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -6,9 +6,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import org.mitchan.erzhan.ui.AlarmsListView
-import org.mitchan.erzhan.viewmodels.AlarmsListViewModel
-import org.mitchan.erzhan.viewmodels.AppViewModelsProvider
+import org.mitchan.erzhan.data.AppViewModelsProvider
 
 @RootNavGraph(start = true)
 @Destination

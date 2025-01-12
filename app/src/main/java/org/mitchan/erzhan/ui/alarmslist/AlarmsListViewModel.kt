@@ -1,13 +1,13 @@
-package org.mitchan.erzhan.viewmodels
+package org.mitchan.erzhan.ui.alarmslist
 
 import androidx.lifecycle.viewModelScope
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.mitchan.erzhan.entities.AlarmsRepository
-import org.mitchan.erzhan.models.AlarmsListModel
-import org.mitchan.erzhan.routes.destinations.AlarmRouteDestination
+import org.mitchan.erzhan.data.AlarmsRepository
+import org.mitchan.erzhan.ui.destinations.AlarmRouteDestination
+import org.mitchan.erzhan.data.IViewModel
 import java.util.UUID
 
 class AlarmsListViewModel(
@@ -19,7 +19,7 @@ class AlarmsListViewModel(
             val items = alarmsRepository.getAll().associateBy { it.id }
 
             stateFlow.update {
-                it.copy(items = items)
+                it.copy(items = items, isInitialized = true)
             }
         }
     }
