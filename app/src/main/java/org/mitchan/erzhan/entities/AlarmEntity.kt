@@ -1,11 +1,13 @@
 package org.mitchan.erzhan.entities
 
+import android.content.Context
 import androidx.room.Dao
 import androidx.room.Database
 import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
@@ -111,6 +113,20 @@ class Converters {
 @TypeConverters(Converters::class)
 abstract class AlarmsDatabase: RoomDatabase() {
     abstract fun alarmDao(): AlarmDao
+
+    companion object {
+        @Volatile
+        private var instance: AlarmsDatabase? = null
+
+        fun getInstance(context: Context): AlarmsDatabase {
+            return instance ?: synchronized(this) {
+                Room
+                    .databaseBuilder(context, AlarmsDatabase::class.java, "alarms_db")
+                    .build()
+                    .also { instance = it }
+            }
+        }
+    }
 }
 
 interface AlarmsRepository {

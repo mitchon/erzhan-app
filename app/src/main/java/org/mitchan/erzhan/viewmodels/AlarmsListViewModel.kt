@@ -5,17 +5,14 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.mitchan.erzhan.DatabaseInstance
-import org.mitchan.erzhan.entities.AlarmsRepositoryImpl
+import org.mitchan.erzhan.entities.AlarmsRepository
 import org.mitchan.erzhan.models.AlarmsListModel
 import org.mitchan.erzhan.routes.destinations.AlarmRouteDestination
 import java.util.UUID
 
-class AlarmsListViewModel: IViewModel<AlarmsListModel>(::AlarmsListModel) {
-
-    private val alarmsRepository by lazy {
-        AlarmsRepositoryImpl(DatabaseInstance.instance!!.alarmDao())
-    }
+class AlarmsListViewModel(
+    private val alarmsRepository: AlarmsRepository
+): IViewModel<AlarmsListModel>(::AlarmsListModel) {
 
     fun initialize() {
         viewModelScope.launch(Dispatchers.IO) {

@@ -8,6 +8,7 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.mitchan.erzhan.ui.AlarmView
 import org.mitchan.erzhan.viewmodels.AlarmViewModel
+import org.mitchan.erzhan.viewmodels.AppViewModelsProvider
 import java.util.UUID
 
 @RootNavGraph
@@ -16,7 +17,7 @@ import java.util.UUID
 fun AlarmRoute(
     id: UUID?,
     navigator: DestinationsNavigator,
-    viewModel: AlarmViewModel = viewModel(),
+    viewModel: AlarmViewModel = viewModel(factory = AppViewModelsProvider.Factory),
 ) {
 
     viewModel.initialize(id)
