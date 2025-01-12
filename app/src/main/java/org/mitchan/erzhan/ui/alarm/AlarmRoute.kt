@@ -17,10 +17,12 @@ fun AlarmRoute(
     navigator: DestinationsNavigator,
     viewModel: AlarmViewModel = viewModel(factory = AppViewModelsProvider.Factory),
 ) {
-
-    viewModel.initialize(id)
     val state = viewModel.observe().collectAsStateWithLifecycle()
 
+    if (!state.value.isInitialized)
+        viewModel.initialize(id)
+
+    //i don't know what to do with saveable inside:(
     if (state.value.isInitialized)
         AlarmView(
             state = state,

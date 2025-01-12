@@ -17,7 +17,8 @@ fun AlarmsListRoute(
 ) {
     val state = viewModel.observe().collectAsStateWithLifecycle()
 
-    viewModel.initialize()
+    if (!state.value.isInitialized) //i don't know how to recompose after i navigate back from AlarmRoute
+        viewModel.initialize()
 
     AlarmsListView (
         state = state,
