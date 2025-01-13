@@ -1,6 +1,8 @@
-package org.mitchan.erzhan.ui.alarm
+package org.mitchan.erzhan.ui.pages.alarm
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -17,19 +19,18 @@ fun AlarmRoute(
     navigator: DestinationsNavigator,
     viewModel: AlarmViewModel = viewModel(factory = AppViewModelsProvider.Factory),
 ) {
-    val state = viewModel.observe().collectAsStateWithLifecycle()
+    val state by viewModel.observe().collectAsStateWithLifecycle()
 
-    if (!state.value.isInitialized)
-        viewModel.initialize(id)
+    LaunchedEffect(Unit) {
+      viewModel.initialize(id)
+    }
 
-    //i don't know what to do with saveable inside:(
-    if (state.value.isInitialized)
-        AlarmView(
-            state = state,
-            onAdd = {
-                viewModel.add(it)
-                navigator.popBackStack()
-            },
-            onCancel = { navigator.popBackStack() }
-        )
+    AlarmView(
+        state = state,
+        onAdd = {
+            viewModel.add(it)
+            viewModel.navigateBack(navigator)
+        },
+        onCancel = { viewModel.navigateBack(navigator) }
+    )
 }

@@ -1,6 +1,7 @@
-package org.mitchan.erzhan.ui.alarmslist
+package org.mitchan.erzhan.ui.pages.alarmslist
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -17,8 +18,9 @@ fun AlarmsListRoute(
 ) {
     val state = viewModel.observe().collectAsStateWithLifecycle()
 
-    if (!state.value.isInitialized) //i don't know how to recompose after i navigate back from AlarmRoute
+    LaunchedEffect(Unit) {
         viewModel.initialize()
+    }
 
     AlarmsListView (
         state = state,

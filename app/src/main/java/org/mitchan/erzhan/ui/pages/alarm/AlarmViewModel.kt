@@ -1,11 +1,14 @@
-package org.mitchan.erzhan.ui.alarm
+package org.mitchan.erzhan.ui.pages.alarm
 
 import androidx.lifecycle.viewModelScope
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mitchan.erzhan.data.AlarmsRepository
 import org.mitchan.erzhan.data.IViewModel
+import org.mitchan.erzhan.ui.pages.NavGraphs
+import org.mitchan.erzhan.ui.pages.destinations.AlarmsListRouteDestination
 import java.util.UUID
 
 class AlarmViewModel(
@@ -25,4 +28,11 @@ class AlarmViewModel(
             alarmsRepository.insert(model)
         }
     }
+
+    fun navigateBack(navigator: DestinationsNavigator) {
+        navigator.navigate(AlarmsListRouteDestination) {
+            popUpTo(NavGraphs.root)
+        }
+    }
+
 }

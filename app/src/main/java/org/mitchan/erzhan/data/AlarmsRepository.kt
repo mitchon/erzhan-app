@@ -2,8 +2,8 @@ package org.mitchan.erzhan.data
 
 import org.mitchan.erzhan.data.AlarmEntity.Companion.toListItem
 import org.mitchan.erzhan.data.AlarmEntity.Companion.toModel
-import org.mitchan.erzhan.ui.alarm.AlarmModel
-import org.mitchan.erzhan.ui.alarmslist.AlarmListItemModel
+import org.mitchan.erzhan.ui.pages.alarm.AlarmModel
+import org.mitchan.erzhan.ui.pages.alarmslist.AlarmListItemModel
 import java.util.UUID
 
 interface AlarmsRepository {

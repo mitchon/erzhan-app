@@ -10,9 +10,9 @@ import androidx.room.Update
 import kotlinx.serialization.json.Json
 import org.mitchan.erzhan.data.AlarmEntity.Companion.toListItem
 import org.mitchan.erzhan.data.AlarmEntity.Companion.toModel
-import org.mitchan.erzhan.ui.alarmslist.AlarmListItemModel
-import org.mitchan.erzhan.ui.alarm.AlarmModel
-import org.mitchan.erzhan.ui.alarm.AlarmModel.Trait
+import org.mitchan.erzhan.ui.pages.alarmslist.AlarmListItemModel
+import org.mitchan.erzhan.ui.pages.alarm.AlarmModel
+import org.mitchan.erzhan.ui.pages.alarm.AlarmModel.Trait
 import java.time.LocalTime
 import java.util.UUID
 

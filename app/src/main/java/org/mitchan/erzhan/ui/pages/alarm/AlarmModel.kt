@@ -1,9 +1,9 @@
-package org.mitchan.erzhan.ui.alarm
+package org.mitchan.erzhan.ui.pages.alarm
 
 import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import org.mitchan.erzhan.ui.alarmslist.AlarmListItemModel
+import org.mitchan.erzhan.ui.pages.alarmslist.AlarmListItemModel
 import java.time.DayOfWeek
 import java.time.LocalTime
 import java.util.UUID

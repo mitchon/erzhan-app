@@ -2,7 +2,7 @@ package org.mitchan.erzhan.data
 
 import androidx.room.TypeConverter
 import kotlinx.serialization.json.Json
-import org.mitchan.erzhan.ui.alarm.AlarmModel.Trait
+import org.mitchan.erzhan.ui.pages.alarm.AlarmModel.Trait
 import java.time.LocalTime
 import java.util.UUID
 

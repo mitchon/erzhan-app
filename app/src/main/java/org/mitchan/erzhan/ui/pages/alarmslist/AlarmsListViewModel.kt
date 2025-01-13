@@ -1,4 +1,4 @@
-package org.mitchan.erzhan.ui.alarmslist
+package org.mitchan.erzhan.ui.pages.alarmslist
 
 import androidx.lifecycle.viewModelScope
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -6,7 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mitchan.erzhan.data.AlarmsRepository
-import org.mitchan.erzhan.ui.destinations.AlarmRouteDestination
+import org.mitchan.erzhan.ui.pages.destinations.AlarmRouteDestination
 import org.mitchan.erzhan.data.IViewModel
 import java.util.UUID
 

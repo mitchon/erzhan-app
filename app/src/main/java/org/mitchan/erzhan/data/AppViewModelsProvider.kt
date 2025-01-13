@@ -5,8 +5,8 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import org.mitchan.erzhan.ErzhanApplication
-import org.mitchan.erzhan.ui.alarm.AlarmViewModel
-import org.mitchan.erzhan.ui.alarmslist.AlarmsListViewModel
+import org.mitchan.erzhan.ui.pages.alarm.AlarmViewModel
+import org.mitchan.erzhan.ui.pages.alarmslist.AlarmsListViewModel
 
 object AppViewModelsProvider {
     val Factory = viewModelFactory {

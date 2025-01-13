@@ -1,6 +1,6 @@
-package org.mitchan.erzhan.ui.alarmslist
+package org.mitchan.erzhan.ui.pages.alarmslist
 
-import org.mitchan.erzhan.ui.alarm.AlarmModel
+import org.mitchan.erzhan.ui.pages.alarm.AlarmModel
 import java.time.LocalTime
 import java.util.UUID
 
