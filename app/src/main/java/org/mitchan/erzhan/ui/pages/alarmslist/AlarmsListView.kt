@@ -42,7 +42,9 @@ fun AlarmsListView(
     var items by remember { mutableStateOf(emptyList<AlarmListItemModel>()) }
 
     LaunchedEffect(state.value.items) {
-        items = state.value.items.values.sortedBy { it.time }
+        items = state.value.items.values
+            .sortedBy { it.time }
+            .sortedByDescending { it.enabled }
     }
 
     Scaffold (
