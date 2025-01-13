@@ -2,7 +2,7 @@ package org.mitchan.erzhan
 
 import android.app.Application
 import android.content.Context
-import org.mitchan.erzhan.data.AlarmsDatabase
+import org.mitchan.erzhan.data.ErzhanDatabase
 import org.mitchan.erzhan.data.AlarmsRepository
 import org.mitchan.erzhan.data.AlarmsRepositoryImpl
 
@@ -21,7 +21,7 @@ interface ApplicationContainer {
 
 class ApplicationContainerImpl(private val context: Context): ApplicationContainer {
     override val alarmsRepository: AlarmsRepository by lazy {
-        AlarmsRepositoryImpl(AlarmsDatabase.getInstance(context).alarmDao())
+        AlarmsRepositoryImpl(ErzhanDatabase.getInstance(context).alarms())
     }
 }
 

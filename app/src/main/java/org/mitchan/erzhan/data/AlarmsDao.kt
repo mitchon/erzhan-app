@@ -7,7 +7,7 @@ import androidx.room.Update
 import java.util.UUID
 
 @Dao
-interface AlarmDao {
+interface AlarmsDao {
     @Query("select * from alarms")
     fun findAll(): List<AlarmEntity>
 
@@ -19,6 +19,9 @@ interface AlarmDao {
 
     @Update
     suspend fun update(entity: AlarmEntity)
+
+    @Query("update alarms set enabled = :enabled where id = :id")
+    suspend fun updateEnabled(id: UUID, enabled: Boolean)
 
     @Query("delete from alarms where id = :id")
     suspend fun delete(id: UUID)

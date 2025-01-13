@@ -27,10 +27,9 @@ class AlarmsListViewModel(
     fun enableToggled(id: UUID) {
         viewModelScope.launch(Dispatchers.IO) {
             stateFlow.value.items[id]?.let { item ->
+                val newItem = alarmsRepository.updateEnabled(item.id, !item.enabled)
                 stateFlow.update {
-                    it.copy(
-                        items = it.items + (item.id to item.copy(enabled = !item.enabled))
-                    )
+                    it.copy(items = it.items + (newItem.id to newItem))
                 }
             }
         }

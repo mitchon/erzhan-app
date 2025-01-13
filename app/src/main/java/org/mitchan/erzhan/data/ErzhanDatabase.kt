@@ -9,17 +9,17 @@ import androidx.room.TypeConverters
 
 @Database(entities = [AlarmEntity::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
-abstract class AlarmsDatabase: RoomDatabase() {
-    abstract fun alarmDao(): AlarmDao
+abstract class ErzhanDatabase: RoomDatabase() {
+    abstract fun alarms(): AlarmsDao
 
     companion object {
         @Volatile
-        private var instance: AlarmsDatabase? = null
+        private var instance: ErzhanDatabase? = null
 
-        fun getInstance(context: Context): AlarmsDatabase {
+        fun getInstance(context: Context): ErzhanDatabase {
             return instance ?: synchronized(this) {
                 Room
-                    .databaseBuilder(context, AlarmsDatabase::class.java, "alarms_db")
+                    .databaseBuilder(context, ErzhanDatabase::class.java, "erzhan_db")
                     .build()
                     .also { instance = it }
             }
