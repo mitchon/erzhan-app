@@ -1,27 +1,15 @@
 package org.mitchan.erzhan
 
 import android.app.Application
-import android.content.Context
-import org.mitchan.erzhan.data.ErzhanDatabase
-import org.mitchan.erzhan.data.AlarmsRepository
-import org.mitchan.erzhan.data.AlarmsRepositoryImpl
+import org.mitchan.erzhan.domain.singleton.AppServiceSingleton
+import org.mitchan.erzhan.domain.singleton.RoomSingleton
 
 class ErzhanApplication: Application() {
-    lateinit var container: ApplicationContainer
 
     override fun onCreate() {
         super.onCreate()
-        container = ApplicationContainerImpl(this)
-    }
-}
-
-interface ApplicationContainer {
-    val alarmsRepository: AlarmsRepository
-}
-
-class ApplicationContainerImpl(private val context: Context): ApplicationContainer {
-    override val alarmsRepository: AlarmsRepository by lazy {
-        AlarmsRepositoryImpl(ErzhanDatabase.getInstance(context).alarms())
+        AppServiceSingleton.getInstance(this.applicationContext)
+        RoomSingleton.getInstance(Unit)
     }
 }
 

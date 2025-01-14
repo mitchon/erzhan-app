@@ -18,7 +18,7 @@ abstract class RoomSingleton protected constructor() : ISingleton, RoomDatabase(
 
     companion object : SingletonHolder<RoomSingleton, Unit>({ buildDatabase() }) {
         private fun buildDatabase(): RoomSingleton {
-            val context: Context = AppServiceSingleton.getInstanceUnsafe().fragmentActivity
+            val context: Context = AppServiceSingleton.getInstanceUnsafe().context
 
             return Room
                 .databaseBuilder(

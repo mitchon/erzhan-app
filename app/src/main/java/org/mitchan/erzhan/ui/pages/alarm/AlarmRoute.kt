@@ -8,7 +8,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import org.mitchan.erzhan.data.AppViewModelsProvider
 import java.util.UUID
 
 @RootNavGraph
@@ -17,7 +16,7 @@ import java.util.UUID
 fun AlarmRoute(
     id: UUID?,
     navigator: DestinationsNavigator,
-    viewModel: AlarmViewModel = viewModel(factory = AppViewModelsProvider.Factory),
+    viewModel: AlarmViewModel = viewModel(),
 ) {
     val state by viewModel.observe().collectAsStateWithLifecycle()
 

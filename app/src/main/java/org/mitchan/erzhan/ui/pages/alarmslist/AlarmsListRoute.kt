@@ -7,14 +7,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import org.mitchan.erzhan.data.AppViewModelsProvider
 
 @RootNavGraph(start = true)
 @Destination
 @Composable
 fun AlarmsListRoute(
     navigator: DestinationsNavigator,
-    viewModel: AlarmsListViewModel = viewModel(factory = AppViewModelsProvider.Factory),
+    viewModel: AlarmsListViewModel = viewModel(),
 ) {
     val state = viewModel.observe().collectAsStateWithLifecycle()
 

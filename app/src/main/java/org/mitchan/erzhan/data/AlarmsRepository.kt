@@ -2,6 +2,7 @@ package org.mitchan.erzhan.data
 
 import org.mitchan.erzhan.data.AlarmEntity.Companion.toListItem
 import org.mitchan.erzhan.data.AlarmEntity.Companion.toModel
+import org.mitchan.erzhan.domain.singleton.RoomSingleton
 import org.mitchan.erzhan.ui.pages.alarm.AlarmModel
 import org.mitchan.erzhan.ui.pages.alarm.AlarmModel.Companion.toListItem
 import org.mitchan.erzhan.ui.pages.alarmslist.AlarmListItemModel
@@ -16,9 +17,9 @@ interface AlarmsRepository {
     suspend fun delete(id: UUID)
 }
 
-class AlarmsRepositoryImpl(
-    private val dao: AlarmsDao
-): AlarmsRepository {
+class AlarmsRepositoryImpl: AlarmsRepository {
+    private val dao: AlarmsDao = RoomSingleton.getInstanceUnsafe().alarms()
+
     override fun getAll(): List<AlarmListItemModel> = dao.findAll().map { it.toListItem() }
 
     override fun getById(id: UUID): AlarmModel? = dao.findById(id)?.toModel()

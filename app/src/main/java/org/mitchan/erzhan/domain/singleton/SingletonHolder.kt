@@ -23,6 +23,6 @@ abstract class SingletonHolder<out T : ISingleton, in Arg>(
     }
 
     fun getInstanceUnsafe(): T {
-        return instance.value ?: throw Exception("$TAG - getInstanceUnsafe: not initialized")
+        return instance.value ?: throw Exception("getInstanceUnsafe: not initialized")
     }
 }

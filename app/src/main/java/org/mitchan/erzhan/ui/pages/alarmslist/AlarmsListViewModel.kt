@@ -6,13 +6,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mitchan.erzhan.data.AlarmsRepository
+import org.mitchan.erzhan.data.AlarmsRepositoryImpl
 import org.mitchan.erzhan.ui.pages.destinations.AlarmRouteDestination
 import org.mitchan.erzhan.data.IViewModel
 import java.util.UUID
 
-class AlarmsListViewModel(
-    private val alarmsRepository: AlarmsRepository
-): IViewModel<AlarmsListModel>(::AlarmsListModel) {
+class AlarmsListViewModel: IViewModel<AlarmsListModel>(::AlarmsListModel) {
+    private val alarmsRepository: AlarmsRepository = AlarmsRepositoryImpl()
 
     fun initialize() {
         viewModelScope.launch(Dispatchers.IO) {
