@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.compose.destinations.core)
+    implementation(libs.androidx.fragment.ktx)
     ksp(libs.compose.destinations.ksp)
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
