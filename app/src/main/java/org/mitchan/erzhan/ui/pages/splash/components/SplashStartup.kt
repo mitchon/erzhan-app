@@ -1,12 +1,9 @@
 package org.mitchan.erzhan.ui.pages.splash.components
 
-import android.provider.CalendarContract
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -14,13 +11,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlin.math.min
 import kotlinx.coroutines.delay
-import org.mitchan.erzhan.R
+import org.mitchan.erzhan.ui.icons.ErzhanIcons
+import org.mitchan.erzhan.ui.icons.Logo
 
 private const val ANIMATION_PRE_WAITING_RATIO = 0.1
 private const val ANIMATION_POST_WAITING_RATION = 0.1
@@ -59,9 +53,9 @@ fun SplashStartup(
         animationSpec = tween(durationMillis = animationMain.toInt())
     )
 
-    Image(
+    Icon(
         modifier = Modifier.size(sizeAnimation.dp),
-        painter = painterResource(id = R.drawable.ic_launcher_foreground),
+        imageVector = ErzhanIcons.Logo,
         contentDescription = ""
     )
 }
