@@ -1,4 +1,4 @@
-package org.mitchan.erzhan.data
+package org.mitchan.erzhan.domain.model
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

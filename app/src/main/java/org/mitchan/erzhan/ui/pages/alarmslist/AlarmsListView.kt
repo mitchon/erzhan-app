@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.mitchan.erzhan.domain.database.model.alarm.Alarm
 import org.mitchan.erzhan.ui.pages.alarmslist.component.AlarmItem
 import java.util.UUID
 
@@ -39,7 +40,7 @@ fun AlarmsListView(
     onEnableToggled: (id: UUID) -> Unit,
     onDelete: (id: UUID) -> Unit,
 ) {
-    var items by remember { mutableStateOf(emptyList<AlarmListItemModel>()) }
+    var items by remember { mutableStateOf(emptyList<Alarm>()) }
 
     LaunchedEffect(state.value.items) {
         items = state.value.items.values

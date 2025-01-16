@@ -5,9 +5,9 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.mitchan.erzhan.data.AlarmsRepository
-import org.mitchan.erzhan.data.AlarmsRepositoryImpl
-import org.mitchan.erzhan.data.IViewModel
+import org.mitchan.erzhan.domain.repository.AlarmsRepository
+import org.mitchan.erzhan.domain.repository.AlarmsRepositoryImpl
+import org.mitchan.erzhan.domain.model.IViewModel
 import org.mitchan.erzhan.ui.pages.NavGraphs
 import org.mitchan.erzhan.ui.pages.destinations.AlarmsListRouteDestination
 import org.mitchan.erzhan.ui.pages.destinations.BarcodeScannerRouteDestination
@@ -18,15 +18,18 @@ class AlarmViewModel: IViewModel<AlarmModel>(::AlarmModel) {
 
     fun initialize(id: UUID?) {
         viewModelScope.launch(Dispatchers.IO) {
-            val model = id?.let { alarmsRepository.getById(id) } ?: AlarmModel()
+            val model = id
+                ?.let { alarmsRepository.getById(it) }
+                ?.let { AlarmModel(value = it, isInitialized = true) }
+                ?: AlarmModel()
 
-            stateFlow.update { model.copy(isInitialized = true) }
+            stateFlow.update { model }
         }
     }
 
     fun add(model: AlarmModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            alarmsRepository.insert(model)
+            alarmsRepository.insert(model.value)
         }
     }
 

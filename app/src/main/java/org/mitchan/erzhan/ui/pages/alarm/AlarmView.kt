@@ -16,6 +16,7 @@ import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import org.mitchan.erzhan.domain.database.model.alarm.Alarm
 import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -23,7 +24,7 @@ import java.time.LocalTime
 fun AlarmView(
     modifier: Modifier = Modifier,
     state: AlarmModel,
-    onAdd: (AlarmModel) -> Unit,
+    onAdd: (Alarm) -> Unit,
     onCancel: () -> Unit,
     onAddBarcode: () -> Unit,
 ) {
@@ -40,8 +41,8 @@ fun AlarmView(
         ) {
             if (it) {
                 val timePickerState = rememberTimePickerState(
-                    initialHour = state.time.hour,
-                    initialMinute = state.time.minute,
+                    initialHour = state.value.time.hour,
+                    initialMinute = state.value.time.minute,
                     is24Hour = true,
                 )
 
@@ -59,7 +60,7 @@ fun AlarmView(
                     Button(
                         onClick = {
                             val time = LocalTime.of(timePickerState.hour, timePickerState.minute)
-                            onAdd(state.copy(time = time)) //TODO
+                            onAdd(state.value.copy(time = time)) //TODO
                         }
                     ) {
                         Text("Add")

@@ -1,4 +1,4 @@
-package org.mitchan.erzhan.data
+package org.mitchan.erzhan.domain.database.model.alarm
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -19,9 +19,6 @@ interface AlarmsDao {
 
     @Update
     suspend fun update(entity: AlarmEntity)
-
-    @Query("update alarms set enabled = :enabled where id = :id")
-    suspend fun updateEnabled(id: UUID, enabled: Boolean)
 
     @Query("delete from alarms where id = :id")
     suspend fun delete(id: UUID)

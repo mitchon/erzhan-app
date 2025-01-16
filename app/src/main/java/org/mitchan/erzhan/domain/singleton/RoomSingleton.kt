@@ -5,9 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import org.mitchan.erzhan.data.AlarmEntity
-import org.mitchan.erzhan.data.AlarmsDao
-import org.mitchan.erzhan.data.Converters
+import org.mitchan.erzhan.domain.database.model.alarm.AlarmEntity
+import org.mitchan.erzhan.domain.database.model.alarm.AlarmsDao
+import org.mitchan.erzhan.domain.database.converters.Converters
 import org.mitchan.erzhan.domain.model.ISingleton
 import org.mitchan.erzhan.domain.singleton.RoomSingleton.Companion.buildDatabase
 

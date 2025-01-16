@@ -1,44 +1,8 @@
 package org.mitchan.erzhan.ui.pages.alarm
 
-import kotlinx.serialization.Polymorphic
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import org.mitchan.erzhan.ui.pages.alarmslist.AlarmListItemModel
-import java.time.DayOfWeek
-import java.time.LocalTime
-import java.util.UUID
+import org.mitchan.erzhan.domain.database.model.alarm.Alarm
 
 data class AlarmModel(
-    val id: UUID = UUID.randomUUID(),
-    val time: LocalTime = LocalTime.now(),
-    val enabled: Boolean = true,
-    val trait: Trait = TraitEveryday,
+    val value: Alarm = Alarm(),
     val isInitialized: Boolean = false,
-) {
-    @Serializable
-    @Polymorphic
-    sealed class Trait
-
-    @Serializable
-    @SerialName("once")
-    data object TraitOnce : Trait()
-    @Serializable
-    @SerialName("everyday")
-    data object TraitEveryday: Trait()
-    @Serializable
-    @SerialName("by-weekday")
-    data class TraitByWeekday(
-        val weekDayMap: Map<DayOfWeek, Boolean>
-    ): Trait()
-
-    companion object {
-        fun AlarmModel.toListItem(): AlarmListItemModel {
-            return AlarmListItemModel(
-                id = this.id,
-                time = this.time,
-                enabled = this.enabled,
-                trait = this.trait,
-            )
-        }
-    }
-}
+)

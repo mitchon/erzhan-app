@@ -21,6 +21,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.mitchan.erzhan.domain.database.model.alarm.Alarm
+import org.mitchan.erzhan.ui.model.Trait
 import org.mitchan.erzhan.ui.pages.alarm.AlarmModel
 import org.mitchan.erzhan.ui.pages.alarmslist.AlarmListItemModel
 import org.mitchan.erzhan.ui.theme.ErzhanTheme
@@ -34,7 +36,7 @@ import kotlin.random.Random
 @Composable
 fun AlarmItem(
     modifier: Modifier = Modifier,
-    alarm: AlarmListItemModel,
+    alarm: Alarm,
     onEnableToggled: (id: UUID) -> Unit,
     onClick: (id: UUID) -> Unit,
     onDelete: (id: UUID) -> Unit
@@ -105,17 +107,11 @@ fun AlarmItem(
 fun AlarmItemPreview() {
     ErzhanTheme {
         AlarmItem (
-            alarm = AlarmListItemModel(
+            alarm = Alarm(
                 id = UUID.randomUUID(),
                 time = LocalTime.now() + Duration.ofMinutes(Random.nextLong() % 10 ),
                 enabled = true,
-                trait = AlarmModel.TraitByWeekday(
-                    weekDayMap = mapOf(
-                        DayOfWeek.MONDAY to true,
-                        DayOfWeek.TUESDAY to false,
-                        DayOfWeek.WEDNESDAY to true,
-                    )
-                )
+                trait = Trait()
             ),
             onEnableToggled = { },
             onClick = { },

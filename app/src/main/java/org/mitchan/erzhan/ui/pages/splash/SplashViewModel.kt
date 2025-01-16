@@ -6,7 +6,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.mitchan.erzhan.data.IViewModel
+import org.mitchan.erzhan.domain.model.IViewModel
 import org.mitchan.erzhan.domain.singleton.AppServiceSingleton
 import org.mitchan.erzhan.domain.singleton.RoomSingleton
 import org.mitchan.erzhan.ui.pages.NavGraphs

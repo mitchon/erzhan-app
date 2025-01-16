@@ -5,10 +5,10 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.mitchan.erzhan.data.AlarmsRepository
-import org.mitchan.erzhan.data.AlarmsRepositoryImpl
+import org.mitchan.erzhan.domain.repository.AlarmsRepository
+import org.mitchan.erzhan.domain.repository.AlarmsRepositoryImpl
 import org.mitchan.erzhan.ui.pages.destinations.AlarmRouteDestination
-import org.mitchan.erzhan.data.IViewModel
+import org.mitchan.erzhan.domain.model.IViewModel
 import java.util.UUID
 
 class AlarmsListViewModel: IViewModel<AlarmsListModel>(::AlarmsListModel) {
@@ -27,7 +27,7 @@ class AlarmsListViewModel: IViewModel<AlarmsListModel>(::AlarmsListModel) {
     fun enableToggled(id: UUID) {
         viewModelScope.launch(Dispatchers.IO) {
             stateFlow.value.items[id]?.let { item ->
-                val newItem = alarmsRepository.updateEnabled(item.id, !item.enabled)
+                val newItem = alarmsRepository.update(item.copy(enabled = !item.enabled))
                 stateFlow.update {
                     it.copy(items = it.items + (newItem.id to newItem))
                 }
