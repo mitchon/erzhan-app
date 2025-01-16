@@ -23,7 +23,7 @@ fun AlarmsListRoute(
 
     AlarmsListView (
         state = state,
-        onClick = { id -> viewModel.navigateItem(id, navigator) },
+        onEdit = { id -> viewModel.navigateItem(id, navigator) },
         onAdd = { viewModel.navigateItem(null, navigator) },
         onEnableToggled = { id -> viewModel.enableToggled(id) },
         onDelete = { id -> viewModel.delete(id) }

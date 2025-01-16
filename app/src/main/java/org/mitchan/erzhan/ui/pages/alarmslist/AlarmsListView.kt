@@ -35,10 +35,10 @@ import java.util.UUID
 fun AlarmsListView(
     modifier: Modifier = Modifier,
     state: State<AlarmsListModel>,
-    onClick: (id: UUID) -> Unit,
+    onEdit: (UUID) -> Unit,
     onAdd: () -> Unit,
-    onEnableToggled: (id: UUID) -> Unit,
-    onDelete: (id: UUID) -> Unit,
+    onEnableToggled: (UUID) -> Unit,
+    onDelete: (UUID) -> Unit,
 ) {
     var items by remember { mutableStateOf(emptyList<Alarm>()) }
 
@@ -68,7 +68,7 @@ fun AlarmsListView(
                        modifier = Modifier.animateItem(),
                        alarm = it,
                        onEnableToggled = onEnableToggled,
-                       onClick = onClick,
+                       onEdit = onEdit,
                        onDelete = onDelete
                    )
                }

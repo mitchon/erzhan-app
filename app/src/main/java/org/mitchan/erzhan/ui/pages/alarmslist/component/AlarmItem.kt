@@ -23,8 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.mitchan.erzhan.domain.database.model.alarm.Alarm
 import org.mitchan.erzhan.ui.model.Trait
-import org.mitchan.erzhan.ui.pages.alarm.AlarmModel
-import org.mitchan.erzhan.ui.pages.alarmslist.AlarmListItemModel
 import org.mitchan.erzhan.ui.theme.ErzhanTheme
 import java.time.DayOfWeek
 import java.time.Duration
@@ -38,12 +36,12 @@ fun AlarmItem(
     modifier: Modifier = Modifier,
     alarm: Alarm,
     onEnableToggled: (id: UUID) -> Unit,
-    onClick: (id: UUID) -> Unit,
+    onEdit: (id: UUID) -> Unit,
     onDelete: (id: UUID) -> Unit
 ) {
     val alarmState by remember(alarm) { mutableStateOf(alarm) }
     Card(
-        modifier = modifier.fillMaxWidth().clickable { onClick(alarm.id) },
+        modifier = modifier.fillMaxWidth().clickable { onEdit(alarm.id) },
     ) {
         Row(
             modifier = Modifier
@@ -54,15 +52,18 @@ fun AlarmItem(
                 modifier = Modifier.weight(1f),
                 horizontalArrangement = Arrangement.Start,
             ) {
-                Column {
-                    val traits = when (val alarmTrait = alarmState.trait) {
-                        is AlarmModel.TraitOnce -> buildAnnotatedString {  }
-                        is AlarmModel.TraitEveryday -> buildAnnotatedString {
+                Column(
+                    verticalArrangement = Arrangement.Bottom,
+                ) {
+                    val alarmTrait = alarmState.trait
+                    val traits = when {
+                        alarmTrait.everyDay -> buildAnnotatedString {
                             withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append(DayOfWeek.entries.joinToString(" ", "", " ") { it.name.first().toString() })
+                                Text("Every day")
                             }
                         }
-                        is AlarmModel.TraitByWeekday -> buildAnnotatedString {
+                        alarmTrait.weekDayMap.isEmpty() -> buildAnnotatedString {}
+                        else -> buildAnnotatedString {
                             DayOfWeek.entries.map { day ->
                                 if (alarmTrait.weekDayMap[day] == true) {
                                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
@@ -94,6 +95,7 @@ fun AlarmItem(
                     )
                     AlarmsListItemContextMenu(
                         alarm = alarmState,
+                        onEdit = { onEdit(alarmState.id) },
                         onDelete = { onDelete(alarmState.id) }
                     )
                 }
@@ -111,10 +113,15 @@ fun AlarmItemPreview() {
                 id = UUID.randomUUID(),
                 time = LocalTime.now() + Duration.ofMinutes(Random.nextLong() % 10 ),
                 enabled = true,
-                trait = Trait()
+                trait = Trait(
+                    weekDayMap = mapOf(
+                        DayOfWeek.TUESDAY to true,
+                        DayOfWeek.THURSDAY to true,
+                    )
+                )
             ),
             onEnableToggled = { },
-            onClick = { },
+            onEdit = { },
             onDelete = { }
         )
     }

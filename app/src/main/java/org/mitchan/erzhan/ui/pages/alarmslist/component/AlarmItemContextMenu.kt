@@ -16,14 +16,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.mitchan.erzhan.ui.pages.alarmslist.AlarmListItemModel
+import org.mitchan.erzhan.domain.database.model.alarm.Alarm
 import java.util.UUID
 
 @Composable
 fun AlarmsListItemContextMenu(
     modifier: Modifier = Modifier,
-    alarm: AlarmListItemModel,
-    onDelete: (id: UUID) -> Unit
+    alarm: Alarm,
+    onEdit: (UUID) -> Unit,
+    onDelete: (UUID) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 

@@ -5,6 +5,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.mitchan.erzhan.domain.database.model.alarm.Alarm
 import org.mitchan.erzhan.domain.repository.AlarmsRepository
 import org.mitchan.erzhan.domain.repository.AlarmsRepositoryImpl
 import org.mitchan.erzhan.domain.model.IViewModel
@@ -27,9 +28,9 @@ class AlarmViewModel: IViewModel<AlarmModel>(::AlarmModel) {
         }
     }
 
-    fun add(model: AlarmModel) {
+    fun add(alarm: Alarm) {
         viewModelScope.launch(Dispatchers.IO) {
-            alarmsRepository.insert(model.value)
+            alarmsRepository.insert(alarm)
         }
     }
 
