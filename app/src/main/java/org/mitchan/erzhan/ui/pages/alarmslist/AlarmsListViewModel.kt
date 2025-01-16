@@ -16,7 +16,9 @@ class AlarmsListViewModel: IViewModel<AlarmsListModel>(::AlarmsListModel) {
 
     fun initialize() {
         viewModelScope.launch(Dispatchers.IO) {
-            val items = alarmsRepository.getAll().associateBy { it.id }
+            val items = alarmsRepository.getAll()
+                .filter { it.id != null }
+                .associateBy { it.id!! }
 
             stateFlow.update {
                 it.copy(items = items, isInitialized = true)
@@ -29,7 +31,7 @@ class AlarmsListViewModel: IViewModel<AlarmsListModel>(::AlarmsListModel) {
             stateFlow.value.items[id]?.let { item ->
                 val newItem = alarmsRepository.update(item.copy(enabled = !item.enabled))
                 stateFlow.update {
-                    it.copy(items = it.items + (newItem.id to newItem))
+                    it.copy(items = it.items + (newItem.id!! to newItem))
                 }
             }
         }

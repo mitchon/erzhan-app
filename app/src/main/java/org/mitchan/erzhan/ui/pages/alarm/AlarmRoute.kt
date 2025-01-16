@@ -25,8 +25,8 @@ fun AlarmRoute(
     }
     AlarmView(
         state = state,
-        onAdd = {
-            viewModel.add(it)
+        onAccept = {
+            viewModel.upsert(it)
             viewModel.navigateBack(navigator)
         },
         onCancel = { viewModel.navigateBack(navigator) },

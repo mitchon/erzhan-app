@@ -9,9 +9,11 @@ import org.mitchan.erzhan.domain.database.model.alarm.Alarm
 import org.mitchan.erzhan.domain.repository.AlarmsRepository
 import org.mitchan.erzhan.domain.repository.AlarmsRepositoryImpl
 import org.mitchan.erzhan.domain.model.IViewModel
+import org.mitchan.erzhan.ui.model.Trait
 import org.mitchan.erzhan.ui.pages.NavGraphs
 import org.mitchan.erzhan.ui.pages.destinations.AlarmsListRouteDestination
 import org.mitchan.erzhan.ui.pages.destinations.BarcodeScannerRouteDestination
+import java.time.LocalDate
 import java.util.UUID
 
 class AlarmViewModel: IViewModel<AlarmModel>(::AlarmModel) {
@@ -21,16 +23,19 @@ class AlarmViewModel: IViewModel<AlarmModel>(::AlarmModel) {
         viewModelScope.launch(Dispatchers.IO) {
             val model = id
                 ?.let { alarmsRepository.getById(it) }
-                ?.let { AlarmModel(value = it, isInitialized = true) }
-                ?: AlarmModel()
+                ?.let { AlarmModel(value = it, isInitialized = true, isNew = false) }
+                ?: AlarmModel(isInitialized = true)
 
             stateFlow.update { model }
         }
     }
 
-    fun add(alarm: Alarm) {
+    fun upsert(alarm: Alarm) {
         viewModelScope.launch(Dispatchers.IO) {
-            alarmsRepository.insert(alarm)
+            if (alarm.id == null)
+                alarmsRepository.insert(alarm)
+            else
+                alarmsRepository.update(alarm)
         }
     }
 
