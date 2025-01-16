@@ -10,7 +10,7 @@ import org.mitchan.erzhan.data.AlarmsRepositoryImpl
 import org.mitchan.erzhan.data.IViewModel
 import org.mitchan.erzhan.ui.pages.NavGraphs
 import org.mitchan.erzhan.ui.pages.destinations.AlarmsListRouteDestination
-import org.mitchan.erzhan.ui.pages.destinations.CameraRouteDestination
+import org.mitchan.erzhan.ui.pages.destinations.BarcodeScannerRouteDestination
 import java.util.UUID
 
 class AlarmViewModel: IViewModel<AlarmModel>(::AlarmModel) {
@@ -37,7 +37,7 @@ class AlarmViewModel: IViewModel<AlarmModel>(::AlarmModel) {
     }
 
     fun navigateToCamera(navigator: DestinationsNavigator) {
-        navigator.navigate(CameraRouteDestination)
+        navigator.navigate(BarcodeScannerRouteDestination)
     }
 
 }
