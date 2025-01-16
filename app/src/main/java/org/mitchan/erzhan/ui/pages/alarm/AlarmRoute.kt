@@ -23,13 +23,13 @@ fun AlarmRoute(
     LaunchedEffect(Unit) {
       viewModel.initialize(id)
     }
-
     AlarmView(
         state = state,
         onAdd = {
             viewModel.add(it)
             viewModel.navigateBack(navigator)
         },
-        onCancel = { viewModel.navigateBack(navigator) }
+        onCancel = { viewModel.navigateBack(navigator) },
+        onAddBarcode = { viewModel.navigateToCamera(navigator) }
     )
 }

@@ -25,6 +25,7 @@ fun AlarmView(
     state: AlarmModel,
     onAdd: (AlarmModel) -> Unit,
     onCancel: () -> Unit,
+    onAddBarcode: () -> Unit,
 ) {
     Scaffold (
         modifier = modifier.fillMaxSize(),
@@ -48,6 +49,12 @@ fun AlarmView(
                     modifier = modifier.fillMaxSize()
                 ) {
                     TimeInput(state = timePickerState)
+
+                    Button(
+                        onClick = onAddBarcode
+                    ) {
+                        Text("Add barcode")
+                    }
 
                     Button(
                         onClick = {

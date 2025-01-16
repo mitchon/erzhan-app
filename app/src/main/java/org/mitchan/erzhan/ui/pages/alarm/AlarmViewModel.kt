@@ -10,6 +10,7 @@ import org.mitchan.erzhan.data.AlarmsRepositoryImpl
 import org.mitchan.erzhan.data.IViewModel
 import org.mitchan.erzhan.ui.pages.NavGraphs
 import org.mitchan.erzhan.ui.pages.destinations.AlarmsListRouteDestination
+import org.mitchan.erzhan.ui.pages.destinations.CameraRouteDestination
 import java.util.UUID
 
 class AlarmViewModel: IViewModel<AlarmModel>(::AlarmModel) {
@@ -33,6 +34,10 @@ class AlarmViewModel: IViewModel<AlarmModel>(::AlarmModel) {
         navigator.navigate(AlarmsListRouteDestination) {
             popUpTo(NavGraphs.root)
         }
+    }
+
+    fun navigateToCamera(navigator: DestinationsNavigator) {
+        navigator.navigate(CameraRouteDestination)
     }
 
 }
