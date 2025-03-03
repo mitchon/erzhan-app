@@ -15,6 +15,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimeInput
+import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -45,10 +46,6 @@ fun AlarmView(
         mutableStateOf(state.value)
     }
 
-    LaunchedEffect(Unit) {
-        alarmFormState = state.value
-    }
-
     Scaffold (
         modifier = modifier.fillMaxSize(),
         topBar = { TopAppBar(title = { Text("Erzhan") }) }
@@ -61,6 +58,8 @@ fun AlarmView(
             label = ""
         ) {
             if (it) {
+                alarmFormState = state.value
+
                 val timePickerState = rememberTimePickerState(
                     initialHour = alarmFormState.time.hour,
                     initialMinute = alarmFormState.time.minute,
@@ -108,7 +107,7 @@ fun AlarmView(
                             onAccept(alarmFormState.copy(time = time))
                         }
                     ) {
-                        if (alarmFormState.id == null)
+                        if (state.isNew)
                             Text("Add")
                         else
                             Text("Edit")

@@ -10,7 +10,7 @@ import java.util.UUID
 @Serializable
 data class Alarm(
     @Serializable(with = UUIDSerializer::class)
-    val id: UUID? = null,
+    val id: UUID = UUID.randomUUID(),
     @Serializable(with = LocalTimeSerializer::class)
     val time: LocalTime = LocalTime.now(),
     val enabled: Boolean = true,
