@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.mitchan.erzhan.domain.database.model.alarm.Alarm
 import org.mitchan.erzhan.ui.model.Trait
+import org.mitchan.erzhan.ui.pages.alarm.components.WeekDayMap
 import org.mitchan.erzhan.ui.theme.ErzhanTheme
 import java.time.LocalTime
 import java.util.UUID
@@ -66,28 +67,16 @@ fun AlarmView(
                     is24Hour = true,
                 )
 
+                var traitState by remember {
+                    mutableStateOf(alarmFormState.trait)
+                }
+
                 Column(
                     modifier = modifier.fillMaxSize()
                 ) {
                     TimeInput(state = timePickerState)
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Checkbox(
-                            checked = alarmFormState.trait.everyDay,
-                            onCheckedChange = {
-                                alarmFormState = alarmFormState.copy(
-                                    trait = alarmFormState.trait.copy(
-                                        everyDay = !alarmFormState.trait.everyDay
-                                    )
-                                )
-                            }
-                        )
-                        Text("Every day")
-                    }
+                    WeekDayMap(modifier, traitState) { traitState = it }
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -104,7 +93,7 @@ fun AlarmView(
                     Button(
                         onClick = {
                             val time = LocalTime.of(timePickerState.hour, timePickerState.minute)
-                            onAccept(alarmFormState.copy(time = time))
+                            onAccept(alarmFormState.copy(time = time, trait = traitState))
                         }
                     ) {
                         if (state.isNew)
