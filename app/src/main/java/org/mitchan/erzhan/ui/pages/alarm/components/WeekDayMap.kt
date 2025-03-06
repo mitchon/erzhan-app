@@ -22,6 +22,9 @@ import java.time.DayOfWeek
 
 private val WEEK_DAYS = DayOfWeek.entries.toList()
 
+private fun checkOnce(trait: Trait): Boolean {
+    return !trait.everyDay && trait.weekDayMap.isEmpty()
+}
 private fun checkEveryday(trait: Trait): Boolean {
     return trait.everyDay || checkEveryday(trait.weekDayMap)
 }
@@ -43,15 +46,42 @@ fun WeekDayMap(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Checkbox(
+                checked = checkOnce(traitState),
+                onCheckedChange = {
+                    traitState = if (!traitState.once)
+                        traitState.copy(
+                            once = true,
+                            everyDay = false,
+                            weekDayMap = emptyMap(),
+                        )
+                    else
+                        traitState.copy(
+                            once = false,
+                            everyDay = true,
+                            weekDayMap = WEEK_DAYS.associateWith { true },
+                        )
+                    onUpdate(traitState)
+                }
+            )
+            Text("Once")
+        }
+        Row(
+            modifier = modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Checkbox(
                 checked = checkEveryday(traitState),
                 onCheckedChange = {
                     traitState = if (!traitState.everyDay)
                         traitState.copy(
+                            once = false,
                             everyDay = true,
                             weekDayMap = WEEK_DAYS.associateWith { true },
                         )
                     else
                         traitState.copy(
+                            once = true,
                             everyDay = false,
                             weekDayMap = emptyMap(),
                         )
@@ -74,6 +104,7 @@ fun WeekDayMap(
                             .also { it[day] = !oldValue }
 
                         traitState = traitState.copy(
+                            once = newValue.isEmpty(),
                             everyDay = checkEveryday(newValue),
                             weekDayMap = newValue
                         )
