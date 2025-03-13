@@ -9,9 +9,13 @@ import org.mitchan.erzhan.domain.database.model.alarm.Alarm
 import org.mitchan.erzhan.domain.repository.AlarmsRepository
 import org.mitchan.erzhan.domain.repository.AlarmsRepositoryImpl
 import org.mitchan.erzhan.domain.model.IViewModel
+import org.mitchan.erzhan.domain.service.AlarmManagerService
+import org.mitchan.erzhan.domain.singleton.AppServiceSingleton
 import org.mitchan.erzhan.ui.pages.NavGraphs
 import org.mitchan.erzhan.ui.pages.destinations.AlarmsListRouteDestination
 import org.mitchan.erzhan.ui.pages.destinations.BarcodeScannerRouteDestination
+import java.time.LocalDate
+import java.time.ZoneOffset
 import java.util.UUID
 
 class AlarmViewModel: IViewModel<AlarmModel>(::AlarmModel) {
@@ -34,6 +38,11 @@ class AlarmViewModel: IViewModel<AlarmModel>(::AlarmModel) {
                 alarmsRepository.insert(alarm)
             else
                 alarmsRepository.update(alarm)
+        }
+        if (alarm.enabled) {
+            val context = AppServiceSingleton.getInstanceUnsafe().context
+            val instant: Long = alarm.time.toEpochSecond(LocalDate.now(), ZoneOffset.ofHours(3)) * 1000
+            AlarmManagerService.setExactAlarm(context, instant)
         }
     }
 

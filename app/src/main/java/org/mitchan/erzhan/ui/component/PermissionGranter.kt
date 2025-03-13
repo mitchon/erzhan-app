@@ -28,27 +28,27 @@ fun PermissionGranter(
     content: @Composable () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    var hasCheckedPermissions by remember { mutableStateOf<Boolean>(false) }
+    var hasUncheckedPermissions by remember { mutableStateOf<Boolean>(true) }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
     ) { permissionsMap ->
         scope.launch(Dispatchers.IO) {
             delay(1000)
-            hasCheckedPermissions = true
+            hasUncheckedPermissions = permissionsMap.values.any { false }
         }
     }
 
-    LaunchedEffect(hasCheckedPermissions) {
+    LaunchedEffect(Unit) {
         scope.launch(Dispatchers.IO) {
-            if (!hasCheckedPermissions) {
+            if (hasUncheckedPermissions) {
                 permissionLauncher.launch(permissions)
             }
         }
     }
 
     Crossfade(
-        targetState = hasCheckedPermissions,
+        targetState = !hasUncheckedPermissions,
         animationSpec = tween(durationMillis = 1000)
     ) {
         if (it)

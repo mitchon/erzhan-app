@@ -57,6 +57,11 @@ fun AlarmItem(
                 ) {
                     val alarmTrait = alarmState.trait
                     val traits = when {
+                        alarmTrait.once -> buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                Text("Once")
+                            }
+                        }
                         alarmTrait.everyDay -> buildAnnotatedString {
                             withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                                 Text("Every day")
