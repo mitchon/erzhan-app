@@ -27,10 +27,9 @@ fun RootRoute(
     PermissionGranter(arrayOf(
         Manifest.permission.CAMERA,
         Manifest.permission.USE_EXACT_ALARM,
-        Manifest.permission.SCHEDULE_EXACT_ALARM,
-        Manifest.permission.FOREGROUND_SERVICE,
-        Manifest.permission.WAKE_LOCK,
-        Manifest.permission.DISABLE_KEYGUARD,
+//        Manifest.permission.FOREGROUND_SERVICE,
+//        Manifest.permission.WAKE_LOCK,
+//        Manifest.permission.DISABLE_KEYGUARD,
     )) {
         Scaffold { innerPadding -> Box(modifier = Modifier.padding(innerPadding)) }
     }

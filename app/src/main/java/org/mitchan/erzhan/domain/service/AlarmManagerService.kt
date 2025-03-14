@@ -9,8 +9,10 @@ import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
@@ -40,20 +42,35 @@ object AlarmManagerService {
         val currentTime = Instant.now().toEpochMilli()
 
         val manager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(context, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE)
+        if (manager.canScheduleExactAlarms()) {
+            val intent = Intent(context, AlarmReceiver::class.java)
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                727,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
 
-        if (triggerAtMillis < currentTime || pendingIntent == null) {
-            return
+            if (triggerAtMillis < currentTime || pendingIntent == null) {
+                return
+            }
+
+            AlarmManagerCompat.setExactAndAllowWhileIdle(
+                manager,
+                AlarmManager.RTC_WAKEUP,
+                triggerAtMillis,
+                pendingIntent
+            )
+        } else {
+            Log.e("erzhan_alarm", "Can't set up alarms!")
         }
-
-        AlarmManagerCompat.setExactAndAllowWhileIdle(manager, AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
     }
 }
 
 class AlarmReceiver: BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
+        Log.d("erzhan_alarm", "Caught!")
         val serviceIntent = Intent(context, AlarmService::class.java)
         ContextCompat.startForegroundService(context, serviceIntent)
     }

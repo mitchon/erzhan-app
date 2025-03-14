@@ -1,5 +1,6 @@
 package org.mitchan.erzhan.ui.component
 
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
@@ -28,27 +29,33 @@ fun PermissionGranter(
     content: @Composable () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    var hasUncheckedPermissions by remember { mutableStateOf<Boolean>(true) }
+    var allGranted by remember { mutableStateOf<Boolean>(false) }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
     ) { permissionsMap ->
         scope.launch(Dispatchers.IO) {
+            permissionsMap.forEach { (permission, granted) ->
+                if (granted)
+                    Log.d("erzhan_permissions", "$permission granted")
+                else
+                    Log.d("erzhan_permissions", "$permission not granted")
+            }
             delay(1000)
-            hasUncheckedPermissions = permissionsMap.values.any { false }
+            allGranted = permissionsMap.all { it.value }
         }
     }
 
-    LaunchedEffect(Unit) {
-        scope.launch(Dispatchers.IO) {
-            if (hasUncheckedPermissions) {
-                permissionLauncher.launch(permissions)
-            }
-        }
-    }
+//    LaunchedEffect(allGranted) {
+//        scope.launch(Dispatchers.IO) {
+//            if (!allGranted) {
+//                permissionLauncher.launch(permissions)
+//            }
+//        }
+//    }
 
     Crossfade(
-        targetState = !hasUncheckedPermissions,
+        targetState = allGranted,
         animationSpec = tween(durationMillis = 1000)
     ) {
         if (it)
@@ -60,6 +67,7 @@ fun PermissionGranter(
                     contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator()
+                    permissionLauncher.launch(permissions)
                 }
             }
     }
