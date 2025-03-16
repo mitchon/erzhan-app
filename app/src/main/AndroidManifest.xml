@@ -8,6 +8,9 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
@@ -27,6 +30,7 @@
             android:theme="@style/Theme.Erzhan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="org.mitchanx.erzhan.DISMISS_ALARM" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -39,7 +43,8 @@
             android:turnScreenOn="true"
             android:showWhenLocked="true"
             android:excludeFromRecents="true"
-            android:noHistory="true" />
+            android:noHistory="true">
+        </activity>
     </application>
 
 </manifest>

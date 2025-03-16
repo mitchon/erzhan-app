@@ -32,6 +32,7 @@ import androidx.core.app.AlarmManagerCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import org.mitchan.erzhan.R
+import org.mitchan.erzhan.domain.singleton.AppServiceSingleton
 import java.time.Instant
 
 object AlarmManagerService {
@@ -81,12 +82,33 @@ class AlarmService: Service() {
         val notification = createNotification()
         startForeground(1, notification)
 
-        val fullscreenIntent = Intent(this, AlarmActivity::class.java)
-        fullscreenIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(fullscreenIntent)
+//        val context = AppServiceSingleton.getInstanceUnsafe().context
+//        val fullscreenIntent = Intent(context, AlarmActivity::class.java)
+//            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+//        fullscreenIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//        startActivity(fullscreenIntent)
 
         return START_NOT_STICKY
     }
+
+    private val dismissReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            stopSelf()
+        }
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        // Register the receiver
+        registerReceiver(dismissReceiver, IntentFilter("org.mitchanx.erzhan.DISMISS_ALARM"))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Unregister the receiver
+        unregisterReceiver(dismissReceiver)
+    }
+
 
     private fun createNotification(): Notification {
         val channelId = "alarm_service_channel"
@@ -99,16 +121,19 @@ class AlarmService: Service() {
         )
         notificationManager.createNotificationChannel(channel)
 
+        val context = AppServiceSingleton.getInstanceUnsafe().context
+        val activityIntent = Intent(context, AlarmActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent = PendingIntent.getActivity(context, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
         return NotificationCompat.Builder(this, channelId)
             .setContentTitle("Alarm is going off")
             .setContentText("Tap to open the app")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
-            .setFullScreenIntent(
-                PendingIntent.getActivity(this, 0, Intent(this, AlarmActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT),
-                true
-            )
+            .setFullScreenIntent(pendingIntent, true)
             .build()
     }
 
@@ -130,12 +155,15 @@ class AlarmActivity : ComponentActivity() {
         this.onBackPressedDispatcher.addCallback(this, callback)
 
         setContent {
-            AlarmScreen()
+            AlarmScreen(onDismiss = {
+                sendBroadcast(Intent("org.mitchanx.erzhan.DISMISS_ALARM"))
+                finish()
+            })
         }
     }
 
     @Composable
-    fun AlarmScreen() {
+    fun AlarmScreen(onDismiss: () -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -150,7 +178,7 @@ class AlarmActivity : ComponentActivity() {
                     color = Color.White,
                     fontSize = 48.sp
                 )
-                Button(onClick = { this@AlarmActivity.finish() }) { Text("Stop") }
+                Button(onClick = onDismiss ) { Text("Stop") }
             }
         }
     }

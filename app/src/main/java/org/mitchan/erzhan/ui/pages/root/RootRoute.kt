@@ -27,7 +27,9 @@ fun RootRoute(
     PermissionGranter(arrayOf(
         Manifest.permission.CAMERA,
         Manifest.permission.USE_EXACT_ALARM,
-//        Manifest.permission.FOREGROUND_SERVICE,
+        Manifest.permission.FOREGROUND_SERVICE,
+        Manifest.permission.POST_NOTIFICATIONS,
+        Manifest.permission.SYSTEM_ALERT_WINDOW,
 //        Manifest.permission.WAKE_LOCK,
 //        Manifest.permission.DISABLE_KEYGUARD,
     )) {
